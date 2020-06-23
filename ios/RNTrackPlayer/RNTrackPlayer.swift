@@ -499,6 +499,7 @@ public class RNTrackPlayer: RCTEventEmitter {
                 MediaItemProperty.artist(track.artist),
                 MediaItemProperty.title(track.title),
                 MediaItemProperty.albumTitle(track.album),
+                NowPlayingInfoProperty.isLiveStream(track.isLiveStream)
             ])
             player.updateNowPlayingPlaybackValues();
             track.getArtwork { [weak self] image in
