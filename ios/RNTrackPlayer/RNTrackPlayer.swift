@@ -407,6 +407,9 @@ public class RNTrackPlayer: RCTEventEmitter {
     public func stop(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         print("Stopping playback")
         player.stop()
+        player.nowPlayingInfoController.set(keyValues: [
+            NowPlayingInfoProperty.isLiveStream(false)
+        ])
         resolve(NSNull())
     }
     
