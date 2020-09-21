@@ -48,7 +48,7 @@ public class RNTrackPlayerAudioPlayer: QueuedAudioPlayer {
 	// Override rate so that we can maintain the same rate on future tracks.
 	override public var rate: Float {
         get { return _rate }
-        set { 
+        set {
 			_rate = newValue
 
 			// Only set the rate on the wrapper if it is already playing.
@@ -100,6 +100,10 @@ public class RNTrackPlayerAudioPlayer: QueuedAudioPlayer {
             }
         }
 
+
+
+
+
         let album = getMetadataItem(forIdentifier: .commonIdentifierAlbumName)
         var artist = getMetadataItem(forIdentifier: .commonIdentifierArtist)
         var title = getMetadataItem(forIdentifier: .commonIdentifierTitle)
@@ -135,6 +139,18 @@ public class RNTrackPlayerAudioPlayer: QueuedAudioPlayer {
                 }
           }
         }
+
+		if #available(iOS 14.0, *) {
+			// use the feature only available in iOS 14
+			if (!title.isEmpty && artist.isEmpty) {
+				if let index = title.range(of: " - ")?.lowerBound {
+					artist = String(title.prefix(upTo: index));
+					title = String(title.suffix(from: title.index(index, offsetBy: 3)));
+				}
+			}
+		}
+
+
         var data : [String : String?] = [
             "title": title.isEmpty ? nil : title,
             "url": url.isEmpty ? nil : url,
@@ -153,7 +169,7 @@ public class RNTrackPlayerAudioPlayer: QueuedAudioPlayer {
         super.AVWrapper(failedWithError: error)
         self.reactEventEmitter.sendEvent(withName: "playback-error", body: ["error": error?.localizedDescription])
     }
-    
+
     override func AVWrapperItemDidPlayToEndTime() {
         if self.nextItems.count == 0 {
 			// For consistency sake, send an event for the track changing to nothing
@@ -168,12 +184,12 @@ public class RNTrackPlayerAudioPlayer: QueuedAudioPlayer {
 				"track": (self.currentItem as? Track)?.id,
 				"position": self.currentTime,
 				])
-		} 
+		}
 		super.AVWrapperItemDidPlayToEndTime()
     }
 
 	// MARK: - Remote Command Center
-    
+
 	/**
 	* Override this method in order to prevent re-enabling remote commands every
 	* time a track loads.
