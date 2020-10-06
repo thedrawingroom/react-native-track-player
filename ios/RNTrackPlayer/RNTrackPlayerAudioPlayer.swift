@@ -88,21 +88,17 @@ public class RNTrackPlayerAudioPlayer: QueuedAudioPlayer {
         super.AVWrapper(didReceiveMetadata: metadata)
         var source: String {
             switch metadata.first?.keySpace {
-            case AVMetadataKeySpace.id3:
-                return "id3"
-            case AVMetadataKeySpace.icy:
-                return "icy-headers"
-            case AVMetadataKeySpace.quickTimeMetadata:
-                return "quicktime"
-            case AVMetadataKeySpace.common:
-                return "unknown"
-            default: return "unknown"
+				case AVMetadataKeySpace.id3:
+					return "id3"
+				case AVMetadataKeySpace.icy:
+					return "icy-headers"
+				case AVMetadataKeySpace.quickTimeMetadata:
+					return "quicktime"
+				case AVMetadataKeySpace.common:
+					return "unknown"
+				default: return "unknown"
             }
         }
-
-
-
-
 
         let album = getMetadataItem(forIdentifier: .commonIdentifierAlbumName)
         var artist = getMetadataItem(forIdentifier: .commonIdentifierArtist)
@@ -132,6 +128,7 @@ public class RNTrackPlayerAudioPlayer: QueuedAudioPlayer {
             // - having "unknown" source
             // - having title metadata
             // - but no artist metadata
+
             if (!title.isEmpty && artist.isEmpty) {
                 if let index = title.range(of: " - ")?.lowerBound {
                     artist = String(title.prefix(upTo: index));
@@ -149,7 +146,6 @@ public class RNTrackPlayerAudioPlayer: QueuedAudioPlayer {
 				}
 			}
 		}
-
 
         var data : [String : String?] = [
             "title": title.isEmpty ? nil : title,
